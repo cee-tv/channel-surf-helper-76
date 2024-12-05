@@ -30,6 +30,17 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
     };
   }, []);
 
+  const destroyPlayer = async () => {
+    if (shakaPlayerRef.current) {
+      try {
+        await shakaPlayerRef.current.destroy();
+        shakaPlayerRef.current = null;
+      } catch (error) {
+        console.error("Error destroying player:", error);
+      }
+    }
+  };
+
   const initPlayer = async () => {
     try {
       // @ts-ignore
@@ -41,9 +52,8 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
         throw new Error("Browser not supported!");
       }
 
-      if (shakaPlayerRef.current) {
-        await shakaPlayerRef.current.destroy();
-      }
+      // Destroy existing player before creating a new one
+      await destroyPlayer();
 
       const player = new shaka.Player(videoRef.current);
       shakaPlayerRef.current = player;
@@ -52,14 +62,20 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
       player.configure({
         abr: {
           enabled: true,
-          defaultBandwidthEstimate: 1000000, // 1Mbps initial estimate
-          switchInterval: 1, // How often to evaluate bandwidth
-          bandwidthUpgradeTarget: 0.85, // Upgrade when bandwidth is 85% available
-          bandwidthDowngradeTarget: 0.95 // Downgrade when bandwidth is 95% utilized
+          defaultBandwidthEstimate: 1000000,
+          switchInterval: 1,
+          bandwidthUpgradeTarget: 0.85,
+          bandwidthDowngradeTarget: 0.95
         },
         streaming: {
-          bufferingGoal: 10, // Buffer 10 seconds ahead
-          rebufferingGoal: 2 // Start playing when we have 2 seconds buffered
+          bufferingGoal: 10,
+          rebufferingGoal: 2,
+          retryParameters: {
+            maxAttempts: 5,
+            baseDelay: 1000,
+            backoffFactor: 2,
+            timeout: 30000
+          }
         }
       });
 
@@ -70,22 +86,33 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
       if (channel.drmKey) {
         console.log("Configuring DRM with key:", channel.drmKey);
         const [keyId, key] = channel.drmKey.split(':');
-        player.configure({
+        await player.configure({
           drm: {
             clearKeys: {
               [keyId]: key
+            },
+            retryParameters: {
+              maxAttempts: 5,
+              baseDelay: 1000,
+              backoffFactor: 2
             }
           }
         });
       }
 
       console.log("Loading URL:", channel.url);
-      await player.load(channel.url);
-      console.log("Video loaded successfully");
-      videoRef.current.play();
-      setIsPlaying(true);
+      try {
+        await player.load(channel.url);
+        console.log("Video loaded successfully");
+        if (videoRef.current) {
+          videoRef.current.play();
+          setIsPlaying(true);
+        }
+      } catch (error) {
+        console.error("Error loading video:", error);
+      }
     } catch (error) {
-      console.error("Error loading video:", error);
+      console.error("Error initializing player:", error);
     }
   };
 
@@ -97,8 +124,17 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
   }, [volume]);
 
   useEffect(() => {
-    initPlayer();
-  }, [channel]); // Reinitialize player when channel changes
+    const initNewChannel = async () => {
+      await destroyPlayer();
+      await initPlayer();
+    };
+    
+    initNewChannel();
+    
+    return () => {
+      destroyPlayer();
+    };
+  }, [channel]);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
