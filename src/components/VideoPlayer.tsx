@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { Channel } from "@/lib/channels";
 import 'shaka-player/dist/shaka-player.ui.js';
 // @ts-ignore
 const shaka = window.shaka;
@@ -29,11 +30,12 @@ export const VideoPlayer = ({ channel, onBuffering }: VideoPlayerProps) => {
           onBuffering?.(event.buffering);
         });
 
-        if (channel.drmUrl) {
+        if (channel.drmKey) {
+          const [keyId, key] = channel.drmKey.split(':');
           player.configure({
             drm: {
               clearKeys: {
-                // Add your clearkey configuration here
+                [keyId]: key
               }
             }
           });
