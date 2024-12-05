@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import shaka from "shaka-player";
-import { Channel } from "@/lib/channels";
+import 'shaka-player/dist/shaka-player.ui.js';
+// @ts-ignore
+const shaka = window.shaka;
 
 interface VideoPlayerProps {
   channel: Channel;
@@ -9,7 +10,7 @@ interface VideoPlayerProps {
 
 export const VideoPlayer = ({ channel, onBuffering }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const shakaPlayerRef = useRef<shaka.Player | null>(null);
+  const shakaPlayerRef = useRef<any | null>(null);
 
   useEffect(() => {
     if (!videoRef.current) return;
