@@ -48,6 +48,21 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
       const player = new shaka.Player(videoRef.current);
       shakaPlayerRef.current = player;
 
+      // Configure auto quality adjustment
+      player.configure({
+        abr: {
+          enabled: true,
+          defaultBandwidthEstimate: 1000000, // 1Mbps initial estimate
+          switchInterval: 1, // How often to evaluate bandwidth
+          bandwidthUpgradeTarget: 0.85, // Upgrade when bandwidth is 85% available
+          bandwidthDowngradeTarget: 0.95 // Downgrade when bandwidth is 95% utilized
+        },
+        streaming: {
+          bufferingGoal: 10, // Buffer 10 seconds ahead
+          rebufferingGoal: 2 // Start playing when we have 2 seconds buffered
+        }
+      });
+
       player.addEventListener("error", (event: any) => {
         console.error("Error code", event.detail.code, "object", event.detail);
       });
@@ -80,6 +95,10 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
       setIsMuted(volume === 0);
     }
   }, [volume]);
+
+  useEffect(() => {
+    initPlayer();
+  }, [channel]); // Reinitialize player when channel changes
 
   const togglePlay = () => {
     if (!videoRef.current) return;
