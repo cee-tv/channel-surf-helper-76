@@ -7,13 +7,12 @@ import 'shaka-player/dist/shaka-player.ui.js';
 
 interface VideoPlayerProps {
   channel: Channel;
-  onBuffering?: (isBuffering: boolean) => void;
 }
 
-export const VideoPlayer = ({ channel, onBuffering }: VideoPlayerProps) => {
+export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [volume, setVolume] = useState(1);
   const [showControls, setShowControls] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -51,11 +50,6 @@ export const VideoPlayer = ({ channel, onBuffering }: VideoPlayerProps) => {
 
       player.addEventListener("error", (event: any) => {
         console.error("Error code", event.detail.code, "object", event.detail);
-      });
-
-      player.addEventListener("buffering", (event: any) => {
-        console.log("Buffering:", event.buffering);
-        onBuffering?.(event.buffering);
       });
 
       if (channel.drmKey) {
@@ -119,6 +113,7 @@ export const VideoPlayer = ({ channel, onBuffering }: VideoPlayerProps) => {
       <video
         ref={videoRef}
         className="w-full h-full object-contain"
+        autoPlay
       />
 
       {/* Custom Controls */}

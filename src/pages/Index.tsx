@@ -3,12 +3,10 @@ import { VideoPlayer } from "@/components/VideoPlayer";
 import { ChannelList } from "@/components/ChannelList";
 import { ChannelControls } from "@/components/ChannelControls";
 import { channels, Channel } from "@/lib/channels";
-import { Loader2 } from "lucide-react";
 
 const Index = () => {
   const [currentChannel, setCurrentChannel] = useState<Channel>(channels[0]);
   const [showChannels, setShowChannels] = useState(false);
-  const [isBuffering, setIsBuffering] = useState(false);
 
   const handlePreviousChannel = () => {
     const currentIndex = channels.findIndex((c) => c.id === currentChannel.id);
@@ -24,10 +22,7 @@ const Index = () => {
 
   return (
     <div className="relative w-full h-screen bg-black">
-      <VideoPlayer
-        channel={currentChannel}
-        onBuffering={setIsBuffering}
-      />
+      <VideoPlayer channel={currentChannel} />
 
       <ChannelControls
         channelName={currentChannel.name}
@@ -46,12 +41,6 @@ const Index = () => {
           }}
           onClose={() => setShowChannels(false)}
         />
-      )}
-
-      {isBuffering && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-50">
-          <Loader2 className="h-8 w-8 animate-spin text-white" />
-        </div>
       )}
     </div>
   );
