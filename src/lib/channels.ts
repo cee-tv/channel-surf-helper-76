@@ -2,7 +2,6 @@ export interface Channel {
   id: string;
   name: string;
   url: string;
-  logo?: string;
   drmKey?: string;
 }
 

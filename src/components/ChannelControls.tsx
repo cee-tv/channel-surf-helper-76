@@ -33,7 +33,7 @@ export const ChannelControls = ({
         <span className="text-white font-medium">{channelName}</span>
       </div>
 
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-40 flex justify-between px-4">
+      <div className="absolute bottom-4 inset-x-0 z-40 flex justify-center gap-4">
         <Button
           variant="ghost"
           size="icon"

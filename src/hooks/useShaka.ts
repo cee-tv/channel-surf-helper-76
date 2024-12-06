@@ -10,7 +10,6 @@ export const useShaka = (channel: Channel) => {
   const destroyPlayer = async () => {
     if (shakaPlayerRef.current) {
       try {
-        await shakaPlayerRef.current.unload();
         await shakaPlayerRef.current.destroy();
         shakaPlayerRef.current = null;
       } catch (error) {
@@ -30,14 +29,12 @@ export const useShaka = (channel: Channel) => {
         throw new Error("Video element or Shaka not available");
       }
 
-      // Ensure old player is destroyed before creating new one
       await destroyPlayer();
-
       const player = new shaka.Player();
       await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
 
-      // Configure auto quality adjustment and network settings
+      // Configure auto quality adjustment
       player.configure({
         abr: {
           enabled: true,
@@ -50,28 +47,10 @@ export const useShaka = (channel: Channel) => {
           bufferingGoal: 10,
           rebufferingGoal: 2,
           retryParameters: {
-            maxAttempts: 3,
+            maxAttempts: 5,
             baseDelay: 1000,
             backoffFactor: 2,
-            timeout: 10000,
-            fuzzFactor: 0.5
-          }
-        },
-        manifest: {
-          retryParameters: {
-            maxAttempts: 3,
-            baseDelay: 1000,
-            backoffFactor: 2,
-            timeout: 10000,
-            fuzzFactor: 0.5
-          }
-        },
-        net: {
-          retryParameters: {
-            maxAttempts: 3,
-            baseDelay: 1000,
-            backoffFactor: 2,
-            timeout: 10000,
+            timeout: 30000,
             fuzzFactor: 0.5
           }
         }
@@ -90,7 +69,7 @@ export const useShaka = (channel: Channel) => {
               [keyId]: key
             },
             retryParameters: {
-              maxAttempts: 3,
+              maxAttempts: 5,
               baseDelay: 1000,
               backoffFactor: 2,
               fuzzFactor: 0.5
@@ -98,11 +77,6 @@ export const useShaka = (channel: Channel) => {
           }
         });
       }
-
-      // Add advanced error handling
-      player.addEventListener('error', function(event: any) {
-        console.error('Error code', event.detail.code, 'object', event.detail);
-      });
 
       await player.load(channel.url);
       if (videoRef.current) {
@@ -117,34 +91,15 @@ export const useShaka = (channel: Channel) => {
   };
 
   useEffect(() => {
-    let mounted = true;
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.js';
     script.async = true;
-    script.crossOrigin = "anonymous";
-    
     script.onload = () => {
-      if (mounted) {
-        // @ts-ignore
-        window.shaka.net.NetworkingEngine.registerScheme(
-          'http',
-          // @ts-ignore
-          window.shaka.net.HttpXHRPlugin
-        );
-        // @ts-ignore
-        window.shaka.net.NetworkingEngine.registerScheme(
-          'https',
-          // @ts-ignore
-          window.shaka.net.HttpXHRPlugin
-        );
-        initPlayer();
-      }
+      initPlayer();
     };
-    
     document.body.appendChild(script);
 
     return () => {
-      mounted = false;
       destroyPlayer();
       document.body.removeChild(script);
     };
