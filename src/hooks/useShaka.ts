@@ -10,6 +10,7 @@ export const useShaka = (channel: Channel) => {
   const destroyPlayer = async () => {
     if (shakaPlayerRef.current) {
       try {
+        await shakaPlayerRef.current.unload();
         await shakaPlayerRef.current.destroy();
         shakaPlayerRef.current = null;
       } catch (error) {
@@ -29,7 +30,9 @@ export const useShaka = (channel: Channel) => {
         throw new Error("Video element or Shaka not available");
       }
 
+      // Ensure old player is destroyed before creating new one
       await destroyPlayer();
+
       const player = new shaka.Player();
       await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
@@ -47,10 +50,10 @@ export const useShaka = (channel: Channel) => {
           bufferingGoal: 10,
           rebufferingGoal: 2,
           retryParameters: {
-            maxAttempts: 5,
+            maxAttempts: 3,
             baseDelay: 1000,
             backoffFactor: 2,
-            timeout: 30000,
+            timeout: 10000,
             fuzzFactor: 0.5
           }
         }
@@ -69,7 +72,7 @@ export const useShaka = (channel: Channel) => {
               [keyId]: key
             },
             retryParameters: {
-              maxAttempts: 5,
+              maxAttempts: 3,
               baseDelay: 1000,
               backoffFactor: 2,
               fuzzFactor: 0.5
@@ -91,15 +94,21 @@ export const useShaka = (channel: Channel) => {
   };
 
   useEffect(() => {
+    let mounted = true;
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.js';
     script.async = true;
+    
     script.onload = () => {
-      initPlayer();
+      if (mounted) {
+        initPlayer();
+      }
     };
+    
     document.body.appendChild(script);
 
     return () => {
+      mounted = false;
       destroyPlayer();
       document.body.removeChild(script);
     };
