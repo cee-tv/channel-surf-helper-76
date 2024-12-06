@@ -3,20 +3,17 @@ import { Channel } from "@/lib/channels";
 import { SearchBar } from "./SearchBar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
 interface ChannelListProps {
   channels: Channel[];
   currentChannel: Channel | null;
-  onChannelSelect: (channel: Channel) => void;
-  onClose: () => void;
+  onChannelSelect: (channel: Channel) => void;  
 }
 
 export const ChannelList = ({
   channels,
   currentChannel,
   onChannelSelect,
-  onClose,
 }: ChannelListProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
