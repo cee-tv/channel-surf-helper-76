@@ -29,14 +29,12 @@ export const useShaka = (channel: Channel) => {
         throw new Error("Video element or Shaka not available");
       }
 
-      shaka.polyfill.installAll();
-      if (!shaka.Player.isBrowserSupported()) {
-        throw new Error("Browser not supported!");
-      }
-
-      const player = new shaka.Player(videoRef.current);
+      await destroyPlayer();
+      const player = new shaka.Player();
+      await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
 
+      // Configure auto quality adjustment
       player.configure({
         abr: {
           enabled: true,
@@ -82,7 +80,7 @@ export const useShaka = (channel: Channel) => {
 
       await player.load(channel.url);
       if (videoRef.current) {
-        await videoRef.current.play();
+        videoRef.current.play();
       }
       setIsLoading(false);
     } catch (error: any) {
@@ -93,16 +91,11 @@ export const useShaka = (channel: Channel) => {
   };
 
   useEffect(() => {
-    const loadChannel = async () => {
-      await destroyPlayer();
-      await initPlayer();
-    };
-
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.js';
     script.async = true;
     script.onload = () => {
-      loadChannel();
+      initPlayer();
     };
     document.body.appendChild(script);
 
