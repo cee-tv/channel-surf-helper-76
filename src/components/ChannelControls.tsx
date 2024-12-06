@@ -52,7 +52,7 @@ export const ChannelControls = ({
         </Button>
       </div>
 
-      <div className="absolute top-4 right-16 z-40">
+      <div className="absolute bottom-4 right-4 z-40">
         <Button
           variant="ghost"
           size="icon"
