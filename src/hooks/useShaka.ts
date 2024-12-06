@@ -37,7 +37,7 @@ export const useShaka = (channel: Channel) => {
       await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
 
-      // Configure auto quality adjustment
+      // Configure auto quality adjustment and network settings
       player.configure({
         abr: {
           enabled: true,
@@ -49,6 +49,24 @@ export const useShaka = (channel: Channel) => {
         streaming: {
           bufferingGoal: 10,
           rebufferingGoal: 2,
+          retryParameters: {
+            maxAttempts: 3,
+            baseDelay: 1000,
+            backoffFactor: 2,
+            timeout: 10000,
+            fuzzFactor: 0.5
+          }
+        },
+        manifest: {
+          retryParameters: {
+            maxAttempts: 3,
+            baseDelay: 1000,
+            backoffFactor: 2,
+            timeout: 10000,
+            fuzzFactor: 0.5
+          }
+        },
+        net: {
           retryParameters: {
             maxAttempts: 3,
             baseDelay: 1000,
@@ -81,6 +99,11 @@ export const useShaka = (channel: Channel) => {
         });
       }
 
+      // Add advanced error handling
+      player.addEventListener('error', function(event: any) {
+        console.error('Error code', event.detail.code, 'object', event.detail);
+      });
+
       await player.load(channel.url);
       if (videoRef.current) {
         videoRef.current.play();
@@ -98,9 +121,22 @@ export const useShaka = (channel: Channel) => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.js';
     script.async = true;
+    script.crossOrigin = "anonymous";
     
     script.onload = () => {
       if (mounted) {
+        // @ts-ignore
+        window.shaka.net.NetworkingEngine.registerScheme(
+          'http',
+          // @ts-ignore
+          window.shaka.net.HttpXHRPlugin
+        );
+        // @ts-ignore
+        window.shaka.net.NetworkingEngine.registerScheme(
+          'https',
+          // @ts-ignore
+          window.shaka.net.HttpXHRPlugin
+        );
         initPlayer();
       }
     };
