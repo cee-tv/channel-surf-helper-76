@@ -27,21 +27,11 @@ export const ChannelList = ({
   return (
     <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm animate-fade-in">
       <div className="absolute left-0 top-0 h-full w-72 bg-black/80 p-4 shadow-xl animate-slide-in-left">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-white">Channels</h2>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onClose} 
-            className="text-white hover:text-white/80"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+        <h2 className="text-lg font-semibold text-white mb-4">Channels</h2>
         
         <SearchBar onSearch={setSearchQuery} />
         
-        <ScrollArea className="h-[calc(100vh-120px)] mt-4 pr-4">
+        <ScrollArea className="h-[calc(100vh-180px)] mt-4 pr-4">
           <div className="space-y-2">
             {filteredChannels.map((channel) => (
               <Button
@@ -59,6 +49,17 @@ export const ChannelList = ({
             ))}
           </div>
         </ScrollArea>
+
+        <div className="absolute bottom-4 right-4">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose} 
+            className="text-white hover:text-white/80"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
