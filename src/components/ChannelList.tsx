@@ -48,9 +48,7 @@ export const ChannelList = ({
               </Button>
             ))}
           </div>
-        </ScrollArea>
-
-        
+        </ScrollArea>       
       </div>
     </div>
   );
