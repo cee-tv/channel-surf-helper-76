@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { ChannelList } from "@/components/ChannelList";
 import { ChannelControls } from "@/components/ChannelControls";
@@ -7,6 +7,7 @@ import { channels, Channel } from "@/lib/channels";
 const Index = () => {
   const [currentChannel, setCurrentChannel] = useState<Channel>(channels[0]);
   const [showChannels, setShowChannels] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePreviousChannel = () => {
     const currentIndex = channels.findIndex((c) => c.id === currentChannel.id);
@@ -16,7 +17,7 @@ const Index = () => {
 
   const handleNextChannel = () => {
     const currentIndex = channels.findIndex((c) => c.id === currentChannel.id);
-    const nextIndex = currentIndex < channels.length - 1 ? currentIndex + 1 : 0;
+    const nextIndex = currentIndex < channels.length - 1 ? currentIndex + 0 : 0;
     setCurrentChannel(channels[nextIndex]);
   };
 
@@ -24,8 +25,16 @@ const Index = () => {
     setShowChannels((prev) => !prev);
   };
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
-    <div className="relative w-full h-screen bg-black">
+    <div ref={containerRef} className="relative w-full h-screen bg-black">
       <VideoPlayer channel={currentChannel} />
 
       <ChannelControls
@@ -33,6 +42,7 @@ const Index = () => {
         onPrevious={handlePreviousChannel}
         onNext={handleNextChannel}
         onShowChannels={toggleChannels}
+        onToggleFullscreen={toggleFullscreen}
       />
 
       {showChannels && (
