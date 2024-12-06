@@ -20,6 +20,10 @@ const Index = () => {
     setCurrentChannel(channels[nextIndex]);
   };
 
+  const toggleChannels = () => {
+    setShowChannels((prev) => !prev);
+  };
+
   return (
     <div className="relative w-full h-screen bg-black">
       <VideoPlayer channel={currentChannel} />
@@ -28,7 +32,7 @@ const Index = () => {
         channelName={currentChannel.name}
         onPrevious={handlePreviousChannel}
         onNext={handleNextChannel}
-        onShowChannels={() => setShowChannels(true)}
+        onShowChannels={toggleChannels}
       />
 
       {showChannels && (
@@ -39,7 +43,7 @@ const Index = () => {
             setCurrentChannel(channel);
             setShowChannels(false);
           }}
-          onClose={() => setShowChannels(false)}
+          onClose={toggleChannels}
         />
       )}
     </div>
