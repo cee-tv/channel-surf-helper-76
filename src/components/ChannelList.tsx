@@ -50,7 +50,7 @@ export const ChannelList = ({
           </div>
         </ScrollArea>
 
-        <div className="absolute bottom-4 right-4">
+        <div className="absolute top-4 left-4">
           <Button 
             variant="ghost" 
             size="icon" 
