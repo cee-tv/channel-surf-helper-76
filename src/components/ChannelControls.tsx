@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Menu, Maximize2 } from "lucide-react";
-import { X } from "lucide-react";
 
 interface ChannelControlsProps {
   onPrevious: () => void;
   onNext: () => void;
-  onShowChannels: () => void;
-  onClose: () => void;
+  onShowChannels: () => void;  
   onToggleFullscreen: () => void;
   channelName: string;
 }
@@ -15,7 +13,6 @@ export const ChannelControls = ({
   onPrevious,
   onNext,
   onShowChannels,
-  onClose,
   onToggleFullscreen,
   channelName,
 }: ChannelControlsProps) => {
@@ -31,16 +28,7 @@ export const ChannelControls = ({
           <Menu className="h-6 w-6" />
         </Button>
       </div>
-      <div className="absolute top-4 left-4">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onClose} 
-            className="text-white hover:text-white/80"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+      
       <div className="absolute top-4 right-4 z-40 flex items-center gap-2 bg-black/60 px-4 py-2 rounded-lg animate-fade-in">
         <span className="text-white font-medium">{channelName}</span>
       </div>
