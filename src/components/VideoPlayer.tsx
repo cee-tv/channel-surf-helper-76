@@ -38,13 +38,12 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
         autoPlay
       />
 
-      {/* Custom Controls */}
-      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-        <div className="flex items-center gap-4">
+      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8 transition-all duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="flex items-center gap-6">
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/10 rounded-full w-12 h-12"
             onClick={() => togglePlay(videoRef)}
           >
             {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
@@ -53,13 +52,13 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-white/10 rounded-full w-12 h-12"
             onClick={() => toggleMute(videoRef)}
           >
             {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
           </Button>
 
-          <div className="w-24">
+          <div className="w-32">
             <Slider
               value={[volume * 100]}
               max={100}
