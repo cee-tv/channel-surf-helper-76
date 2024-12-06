@@ -29,11 +29,11 @@ export const ChannelControls = ({
         </Button>
       </div>
       
-      <div className="absolute top-4 right-4 z-40 flex items-center gap-2 bg-black/60 px-4 py-2 rounded-lg">
+      <div className="absolute top-4 right-4 z-40 flex items-center gap-2 bg-black/60 px-4 py-2 rounded-lg animate-fade-in">
         <span className="text-white font-medium">{channelName}</span>
       </div>
 
-      <div className="absolute inset-0 z-40 flex items-center justify-center gap-4">
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-40 flex justify-between px-4">
         <Button
           variant="ghost"
           size="icon"

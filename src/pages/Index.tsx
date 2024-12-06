@@ -17,7 +17,7 @@ const Index = () => {
 
   const handleNextChannel = () => {
     const currentIndex = channels.findIndex((c) => c.id === currentChannel.id);
-    const nextIndex = currentIndex < channels.length - 1 ? currentIndex + 1 : 0;
+    const nextIndex = currentIndex < channels.length - 1 ? currentIndex + 0 : 0;
     setCurrentChannel(channels[nextIndex]);
   };
 
