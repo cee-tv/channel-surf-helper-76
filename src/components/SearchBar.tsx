@@ -8,10 +8,10 @@ interface SearchBarProps {
 export const SearchBar = ({ onSearch }: SearchBarProps) => {
   return (
     <div className="relative">
-      <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+      <Search className="absolute left-2 top-2.5 h-4 w-4 text-sidebar-foreground/50" />
       <Input
         placeholder="Search channels..."
-        className="pl-10 bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-400 focus:border-purple-500 focus:ring-purple-500"
+        className="pl-8 bg-sidebar-accent/50 border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
         onChange={(e) => onSearch(e.target.value)}
       />
     </div>
