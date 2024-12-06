@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, List } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ChannelControlsProps {
   onPrevious: () => void;
@@ -11,7 +11,6 @@ interface ChannelControlsProps {
 export const ChannelControls = ({
   onPrevious,
   onNext,
-  onShowChannels,
   channelName,
 }: ChannelControlsProps) => {
   return (
@@ -36,17 +35,6 @@ export const ChannelControls = ({
           onClick={onNext}
         >
           <ChevronRight className="h-8 w-8" />
-        </Button>
-      </div>
-
-      <div className="absolute bottom-4 right-4 z-40">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="bg-black/60 hover:bg-black/80 text-white"
-          onClick={onShowChannels}
-        >
-          <List className="h-5 w-5" />
         </Button>
       </div>
     </>
