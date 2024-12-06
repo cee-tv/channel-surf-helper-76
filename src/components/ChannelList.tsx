@@ -1,22 +1,24 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 import { Channel } from "@/lib/channels";
 import { SearchBar } from "./SearchBar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
 interface ChannelListProps {
+  onClose: () => void;
   channels: Channel[];
   currentChannel: Channel | null;
   onChannelSelect: (channel: Channel) => void; 
-  onClose: () => void;
+  
 }
 
 export const ChannelList = ({
+  onClose,
   channels,
   currentChannel,
   onChannelSelect,
-  onClose,
+  
 }: ChannelListProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -34,8 +36,7 @@ export const ChannelList = ({
           >
             <X className="h-4 w-4" />
           </Button>
-        </div>
-    
+        </div>    
     <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm animate-fade-in">
       <div className="absolute left-0 top-4 h-full w-72 bg-black/80 p-4 shadow-xl animate-slide-in-left">
         <h2 className="text-lg font-semibold text-white mb-4">Channels</h2>
@@ -61,6 +62,5 @@ export const ChannelList = ({
           </div>
         </ScrollArea>       
       </div>
-    </div>
   );
 };
