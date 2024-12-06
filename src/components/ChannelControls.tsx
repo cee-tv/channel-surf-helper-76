@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Menu, Maximize2 } from "lucide-react";
+import { X } from "lucide-react";
 
 interface ChannelControlsProps {
   onPrevious: () => void;
   onNext: () => void;
   onShowChannels: () => void;
+  onClose: () => void;
   onToggleFullscreen: () => void;
   channelName: string;
 }
@@ -13,6 +15,7 @@ export const ChannelControls = ({
   onPrevious,
   onNext,
   onShowChannels,
+  onClose,
   onToggleFullscreen,
   channelName,
 }: ChannelControlsProps) => {
