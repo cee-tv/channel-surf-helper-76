@@ -50,16 +50,7 @@ export const ChannelList = ({
           </div>
         </ScrollArea>
 
-        <div className="absolute top-0 left-4">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onClose} 
-            className="text-white hover:text-white/80"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+        
       </div>
     </div>
   );
