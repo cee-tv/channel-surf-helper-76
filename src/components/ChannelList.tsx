@@ -47,7 +47,10 @@ export const ChannelList = ({
                 {channel.name}
               </Button>
             ))}
-             <div className="absolute top-4 left-4">
+          </div>
+        </ScrollArea>
+
+        <div className="absolute top-4 left-4">
           <Button 
             variant="ghost" 
             size="icon" 
@@ -56,8 +59,7 @@ export const ChannelList = ({
           >
             <X className="h-4 w-4" />
           </Button>
-        </div>          
-        </ScrollArea>       
+        </div>
       </div>
     </div>
   );
