@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Channel } from "@/lib/channels";
+import { Channel } from "@/lib/types/channel";
 
 export const useShaka = (channel: Channel) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -34,33 +34,37 @@ export const useShaka = (channel: Channel) => {
       await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
 
-      // Configure player with CORS settings and other optimizations
+      // Configure player with optimized settings
       player.configure({
         streaming: {
-          bufferingGoal: 30,
-          rebufferingGoal: 15,
-          bufferBehind: 30,
+          bufferingGoal: 60,
+          rebufferingGoal: 30,
+          bufferBehind: 60,
           retryParameters: {
-            maxAttempts: 5,
+            maxAttempts: 10,
             baseDelay: 1000,
             backoffFactor: 2,
-            timeout: 30000,
+            timeout: 60000,
             fuzzFactor: 0.5
           },
-          // Add CORS configuration
-          requestFilter: (type: any, request: any) => {
-            // Add CORS headers to the request
-            request.allowCrossSiteCredentials = false;
-            request.headers = {
-              ...request.headers,
-              'Origin': window.location.origin
-            };
+          failureCallback: (error: any) => {
+            console.error("Streaming failure:", error);
+            setError("Streaming error: " + error.message);
+          }
+        },
+        manifest: {
+          retryParameters: {
+            maxAttempts: 10,
+            baseDelay: 1000,
+            backoffFactor: 2,
+            timeout: 60000,
+            fuzzFactor: 0.5
           }
         },
         abr: {
           enabled: true,
           defaultBandwidthEstimate: 1000000,
-          switchInterval: 1,
+          switchInterval: 8,
           bandwidthUpgradeTarget: 0.85,
           bandwidthDowngradeTarget: 0.95
         }
@@ -73,6 +77,7 @@ export const useShaka = (channel: Channel) => {
 
       // Add DRM configuration if needed
       if (channel.drmKey) {
+        console.log("Configuring DRM for channel:", channel.name);
         const [keyId, key] = channel.drmKey.split(':');
         await player.configure({
           drm: {
@@ -84,6 +89,12 @@ export const useShaka = (channel: Channel) => {
               baseDelay: 1000,
               backoffFactor: 2,
               fuzzFactor: 0.5
+            },
+            advanced: {
+              'org.w3.clearkey': {
+                distinctiveIdentifierRequired: false,
+                persistentStateRequired: false
+              }
             }
           }
         });
