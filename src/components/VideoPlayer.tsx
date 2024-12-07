@@ -4,6 +4,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { useShaka } from "@/hooks/useShaka";
 import { useVideoControls } from "@/hooks/useVideoControls";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface VideoPlayerProps {
   channel: Channel;
@@ -37,6 +38,8 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
         className="w-full h-full object-contain"
         autoPlay
       />
+
+      {isLoading && <LoadingSpinner />}
 
       {/* Custom Controls */}
       <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
