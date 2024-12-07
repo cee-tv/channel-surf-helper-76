@@ -62,13 +62,18 @@ export const VideoPlayer = ({ channel }: VideoPlayerProps) => {
             {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
           </Button>
 
-          <div className="w-24">
+          <div className="w-24 relative group">
             <Slider
               value={[volume * 100]}
               max={100}
               step={1}
-              className="cursor-pointer"
+              className="cursor-pointer relative z-10"
               onValueChange={(value) => updateVolume(videoRef, value[0] / 100)}
+            />
+            <div className="absolute inset-0 bg-white/5 rounded-full transform scale-y-[2] -z-0" />
+            <div 
+              className="absolute inset-0 bg-white/10 rounded-full transform scale-y-[2] -z-0"
+              style={{ width: `${volume * 100}%` }}
             />
           </div>
         </div>

@@ -34,35 +34,26 @@ export const useShaka = (channel: Channel) => {
       await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
 
-      // Configure player with CORS settings and other optimizations
+      // Optimize player configuration for faster loading
       player.configure({
         streaming: {
-          bufferingGoal: 30,
-          rebufferingGoal: 15,
+          bufferingGoal: 10,
+          rebufferingGoal: 5,
           bufferBehind: 30,
           retryParameters: {
-            maxAttempts: 5,
-            baseDelay: 1000,
-            backoffFactor: 2,
-            timeout: 30000,
-            fuzzFactor: 0.5
-          },
-          // Add CORS configuration
-          requestFilter: (type: any, request: any) => {
-            // Add CORS headers to the request
-            request.allowCrossSiteCredentials = false;
-            request.headers = {
-              ...request.headers,
-              'Origin': window.location.origin
-            };
+            maxAttempts: 3,
+            baseDelay: 500,
+            backoffFactor: 1.5,
+            timeout: 20000
           }
         },
-        abr: {
-          enabled: true,
-          defaultBandwidthEstimate: 1000000,
-          switchInterval: 1,
-          bandwidthUpgradeTarget: 0.85,
-          bandwidthDowngradeTarget: 0.95
+        manifest: {
+          retryParameters: {
+            maxAttempts: 3,
+            baseDelay: 500,
+            backoffFactor: 1.5,
+            timeout: 20000
+          }
         }
       });
 
@@ -78,12 +69,6 @@ export const useShaka = (channel: Channel) => {
           drm: {
             clearKeys: {
               [keyId]: key
-            },
-            retryParameters: {
-              maxAttempts: 5,
-              baseDelay: 1000,
-              backoffFactor: 2,
-              fuzzFactor: 0.5
             }
           }
         });
