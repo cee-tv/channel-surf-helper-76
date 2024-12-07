@@ -22,36 +22,33 @@ export const ChannelControls = ({
         <Button
           variant="ghost"
           size="icon"
-          className="bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+          className="bg-black/60 hover:bg-black/80 text-white"
           onClick={onShowChannels}
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-6 w-6" />
         </Button>
       </div>
       
-      <div className="absolute top-4 right-4 z-40 flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-md backdrop-blur-sm animate-fade-in">
-        <span className="text-sm text-white font-medium">{channelName}</span>
+      <div className="absolute top-4 right-4 z-40 flex items-center gap-2 bg-black/60 px-4 py-2 rounded-lg animate-fade-in">
+        <span className="text-white font-medium">{channelName}</span>
       </div>
 
-      <div className="absolute inset-y-0 left-0 z-40 flex items-center px-4">
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-40 flex justify-between px-4">
         <Button
           variant="ghost"
           size="icon"
-          className="bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+          className="bg-black/60 hover:bg-black/80 text-white"
           onClick={onPrevious}
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-8 w-8" />
         </Button>
-      </div>
-
-      <div className="absolute inset-y-0 right-0 z-40 flex items-center px-4">
         <Button
           variant="ghost"
           size="icon"
-          className="bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+          className="bg-black/60 hover:bg-black/80 text-white"
           onClick={onNext}
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-8 w-8" />
         </Button>
       </div>
 
@@ -59,10 +56,10 @@ export const ChannelControls = ({
         <Button
           variant="ghost"
           size="icon"
-          className="bg-black/40 hover:bg-black/60 text-white backdrop-blur-sm"
+          className="bg-black/60 hover:bg-black/80 text-white"
           onClick={onToggleFullscreen}
         >
-          <Maximize2 className="h-5 w-5" />
+          <Maximize2 className="h-6 w-6" />
         </Button>
       </div>
     </>
