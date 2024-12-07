@@ -3,6 +3,7 @@ export interface Channel {
   name: string;
   url: string;
   drmKey?: string;
+  logo?: string;
 }
 
 export const channels: Channel[] = [

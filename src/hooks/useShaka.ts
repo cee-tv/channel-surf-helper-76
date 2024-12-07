@@ -34,35 +34,51 @@ export const useShaka = (channel: Channel) => {
       await player.attach(videoRef.current);
       shakaPlayerRef.current = player;
 
-      // Optimize player configuration for faster loading
+      // Performance optimized configuration
       player.configure({
         streaming: {
-          bufferingGoal: 10,
-          rebufferingGoal: 5,
-          bufferBehind: 30,
+          // Reduce initial buffering time
+          bufferingGoal: 5,
+          rebufferingGoal: 2,
+          // Keep small buffer to reduce memory usage
+          bufferBehind: 15,
           retryParameters: {
-            maxAttempts: 3,
-            baseDelay: 500,
-            backoffFactor: 1.5,
-            timeout: 20000
-          }
+            maxAttempts: 2,
+            baseDelay: 250,
+            backoffFactor: 1.2,
+            timeout: 10000
+          },
+          // Enable low latency streaming
+          lowLatencyMode: true,
+          // Prefer lower quality initially for faster start
+          preferredAudioChannelCount: 2,
+          preferFasterQualityChange: true
         },
         manifest: {
           retryParameters: {
-            maxAttempts: 3,
-            baseDelay: 500,
-            backoffFactor: 1.5,
-            timeout: 20000
+            maxAttempts: 2,
+            baseDelay: 250,
+            backoffFactor: 1.2,
+            timeout: 10000
           }
+        },
+        // Disable ABR initially for faster startup
+        abr: {
+          enabled: false,
+          defaultBandwidthEstimate: 500000
         }
       });
+
+      // Enable ABR after initial playback
+      setTimeout(() => {
+        player.configure('abr.enabled', true);
+      }, 5000);
 
       player.addEventListener("error", (event: any) => {
         console.error("Player error:", event.detail);
         setError(event.detail.message);
       });
 
-      // Add DRM configuration if needed
       if (channel.drmKey) {
         const [keyId, key] = channel.drmKey.split(':');
         await player.configure({
