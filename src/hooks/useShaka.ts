@@ -37,10 +37,8 @@ export const useShaka = (channel: Channel) => {
       // Performance optimized configuration
       player.configure({
         streaming: {
-          // Reduce initial buffering time
           bufferingGoal: 5,
           rebufferingGoal: 2,
-          // Keep small buffer to reduce memory usage
           bufferBehind: 15,
           retryParameters: {
             maxAttempts: 2,
@@ -48,9 +46,7 @@ export const useShaka = (channel: Channel) => {
             backoffFactor: 1.2,
             timeout: 10000
           },
-          // Enable low latency streaming
           lowLatencyMode: true,
-          // Prefer lower quality initially for faster start
           preferredAudioChannelCount: 2,
           preferFasterQualityChange: true
         },
@@ -60,16 +56,21 @@ export const useShaka = (channel: Channel) => {
             baseDelay: 250,
             backoffFactor: 1.2,
             timeout: 10000
+          },
+          // Disable HLS manifest parsing
+          dash: {
+            enabled: true
+          },
+          hls: {
+            enabled: false
           }
         },
-        // Disable ABR initially for faster startup
         abr: {
           enabled: false,
           defaultBandwidthEstimate: 500000
         }
       });
 
-      // Enable ABR after initial playback
       setTimeout(() => {
         player.configure('abr.enabled', true);
       }, 5000);
